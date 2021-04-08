@@ -1,0 +1,58 @@
+.case{
+  height: calc(100vh - 80px);
+  .case-left{
+    width: 100px;
+    height: calc(100% - 100px);
+    float: left;
+    background-color: #1F7C69;
+    color: #fff;
+    border-radius: 20px;
+    border-top-left-radius: 50px;
+    text-align: center;
+    padding: 50px 0;
+    i {
+      display: block;
+      font-size: 20px;
+    }
+    div {
+      padding: 15px 0;
+      &:hover {
+        background-color: #116151;
+      }
+      &.choose-item {
+        color: #68aea0;
+        background-color: #116151;
+      }
+    }
+  }
+  .case-main{
+    width: calc(100% - 100px);
+    float: left;
+    height: 100%;
+    .auth-input {
+      text-align: center;
+      position: fixed;
+      bottom: 16px;
+      width: 100%;
+    }
+    .case-list {
+      background-color: rgb(255 255 255 / 72%);
+      height: calc(100% - 140px);
+      border-radius: 20px;
+      padding: 30px;
+      box-sizing: content-box;
+      margin: 20px;
+      overflow: auto;
+      .case-item{
+        display: inline-block;
+        padding: 15px;
+        &:hover{
+          background-color: #e6e6e6;
+        }
+        img{
+          height: 100px;
+        }
+      }
+    }
+  }
+}

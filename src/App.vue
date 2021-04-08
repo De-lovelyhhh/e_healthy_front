@@ -1,28 +1,66 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div id="app">
+        <Navigation/>
+<!--        <CaseDetail/>-->
+        <router-view></router-view>
+    </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Navigation from '@/components/Navigation/Navigation'
+import CaseDetail from './components/CaseDetail/CaseDetail'
+import { api } from './util/api'
+import { cache } from './util/cache'
+import { initSocket, send } from './util/websocket'
+import store from'./store/index'
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+    name: 'App',
+    components: {
+        Navigation,
+        // CaseDetail
+    },
+    mounted() {
+        this.checkToken()
+        initSocket.call(this)
+    },
+    methods: {
+        checkToken() {
+            let token = cache.getStroage('token')
+
+            if (!token) {
+                this.$router.push('/login')
+                return
+            }
+
+            this.$http.post(api.CHECK_TOKEN, {}, {
+                headers: {
+                    token
+                }
+            }).then(res => {
+                if (res.data.code !== 0) {
+                    this.$router.push('/login')
+                } else {
+                    const userInfo = {}
+                    userInfo.account = res.data.data.Account
+                    userInfo.identity = res.data.data.Identity || 0
+                    userInfo.name = res.data.data.Name || ''
+                    userInfo.password = res.data.data.Password
+                    store.commit('userInfo/changeUserInfo', userInfo)
+                    send.call(this, {account: userInfo.account, identity: userInfo.identity, target: '', message: ''})
+                }
+            })
+        }
+    }
 }
 </script>
 
-<style>
+<style lang="less">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  background-color: #eeeeee;
+  height: calc(100vh - 16px);
+    a {
+        cursor: pointer;
+    }
 }
 </style>
