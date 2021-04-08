@@ -57,7 +57,6 @@ export default {
             let fields = this.checkList.join(';') + ';'
 
             let { deleteData, newData } = this.getDiff(checkListBefore, JSON.parse(JSON.stringify(this.checkList)))
-            // TODO 修改参数
             let { data } = await this.$http.get(api.CHANGE_PRIVATE_FIELD, {
                 params: {
                     caseId: this.caseId,

@@ -42,7 +42,7 @@
 <!--                    <el-input v-model="form.record_date" disabled></el-input>-->
 <!--                </el-form-item>-->
                 <el-form-item label="诊断医生">
-                    <el-input v-model="form.doctor_account" disabled></el-input>
+                    <el-input disabled>{{!disable ? user.name : form.doctor_account}}</el-input>
                 </el-form-item>
             </div>
             <el-form-item v-if="!disable || identity === 1">

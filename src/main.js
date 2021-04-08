@@ -67,13 +67,18 @@ const router = new VueRouter({
 
 router.afterEach((to, from, next) => {
     if (to.path === '/login') {
-
-        wsClose.call(Vue)
+        if (store.state.userInfo.user.identity) {
+            wsClose.call(Vue)
+        }
         cache.clearStorage('token')
         store.commit('userInfo/deleteUserInfo')
     }
-    if (to.path === '/case_list') {
+    if (to.path === '/case_list' || to.path.includes('/case_detail')) {
         store.commit('global/getActivedIndex', '2')
+    } else if (to.path === '/message_list') {
+        store.commit('global/getActivedIndex', '3')
+    } else if (to.path.includes('/change_fields')) {
+        store.commit('global/getActivedIndex', '4')
     }
 })
 

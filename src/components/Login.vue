@@ -84,7 +84,7 @@ export default {
                             account: this.form.account,
                             identity: this.form.identity,
                             password: this.form.password,
-                            name: ''
+                            name: this.form.name
                         }
                         store.commit('userInfo/changeUserInfo', userInfo)
                         initSocket.call(this)
