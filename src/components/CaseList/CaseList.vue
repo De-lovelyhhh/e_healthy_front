@@ -19,8 +19,8 @@
             <div class="case-list">
                 <div v-for="(item, index) in caseList" :key="item.case_id" @click="toDetail(index)" class="case-item">
                     <img src="../../assets/case.png">
-                    <div>病历号：{{item.case_id}}</div>
-                    <div v-if="clickIndex === 1">患者：{{item.Name}}</div>
+                    <div>病历号：{{item.case_id || item.CaseHistory.case_id}}</div>
+                    <div v-if="clickIndex === 1">患者：{{item.case_id || item.CaseHistory.Name || item.PrivateCaseHistory.Name}}</div>
                 </div>
             </div>
 
@@ -57,6 +57,9 @@ export default {
     computed: {
         user() {
             return store.state.userInfo.user
+        },
+        token() {
+            return cache.getStroage('token')
         }
     },
     created() {
@@ -98,9 +101,10 @@ export default {
             })
         },
         async getCaseList() {
+            console.log(this.token)
             let { data } = await this.$http.get(api.GET_CASE_LIST,{
                 headers: {
-                    token: cache.getStroage('token')
+                    token: this.token
                 }
             })
 
@@ -112,7 +116,8 @@ export default {
             this.caseList = data.data
         },
         toDetail(index) {
-            this.$router.push(`/case_detail/${this.caseList[index].case_id}`)
+            let caseId = this.caseList[index].case_id || this.caseList[index].CaseHistory.case_id
+            this.$router.push(`/case_detail/${caseId}`)
         },
         async getMyCaseList() {
             let { data } = await this.$http.get(api.GET_MY_CASE_LIST, {

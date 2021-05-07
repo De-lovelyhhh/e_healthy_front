@@ -5,7 +5,6 @@ import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 import VueRouter from 'vue-router'
 import Login from './components/Login'
-import Home from './components/Home'
 import CaseList from './components/CaseList/CaseList'
 import AgreeAuth from './components/AgreeAuth/AgreeAuth'
 import CaseDetail from './components/CaseDetail/CaseDetail'
@@ -33,17 +32,12 @@ const router = new VueRouter({
             component: Login
         },
         {
-            path: '/',
-            name: 'Home',
-            component: Home
-        },
-        {
             path: '/case_list',
             name: 'CaseList',
             component: CaseList
         },
         {
-            path: '/auth/:sender',
+            path: '/auth/:sender/:index',
             name: 'AgreeAuth',
             component: AgreeAuth
         },
@@ -67,18 +61,19 @@ const router = new VueRouter({
 
 router.afterEach((to, from, next) => {
     if (to.path === '/login') {
-        if (store.state.userInfo.user.identity) {
+        if (store.state.userInfo.user.account) {
             wsClose.call(Vue)
         }
         cache.clearStorage('token')
         store.commit('userInfo/deleteUserInfo')
+        store.commit('userInfo/deleteToken')
     }
     if (to.path === '/case_list' || to.path.includes('/case_detail')) {
-        store.commit('global/getActivedIndex', '2')
+        store.commit('global/getActivedIndex', '1')
     } else if (to.path === '/message_list') {
-        store.commit('global/getActivedIndex', '3')
+        store.commit('global/getActivedIndex', '2')
     } else if (to.path.includes('/change_fields')) {
-        store.commit('global/getActivedIndex', '4')
+        store.commit('global/getActivedIndex', '3')
     }
 })
 

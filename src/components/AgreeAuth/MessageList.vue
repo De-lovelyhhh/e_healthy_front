@@ -1,6 +1,6 @@
 <template>
     <div v-if="messageList && messageList.length" class="message">
-        <div v-for="(item, index) in messageList" :key="index" @click="toAuth(item.sender)" class="msg-list">
+        <div v-for="(item, index) in messageList" :key="index" @click="toAuth(item.sender, index)" class="msg-list">
             <div>{{item.sender}}请求您的授权</div>
             <div class="el-icon-close" @click.stop="deleteMsg(index)"></div>
         </div>
@@ -17,7 +17,6 @@ export default {
         }
     },
     created() {
-        console.log(store.state)
         this.messageList = store.state.messageList.messageList
     },
     computed: {
@@ -34,8 +33,8 @@ export default {
         deleteMsg(index) {
             store.commit('messageList/deleteMessage', index)
         },
-        toAuth(sender) {
-            this.$router.push(`/auth/${sender}`)
+        toAuth(sender, index) {
+            this.$router.push(`/auth/${sender}/${index}`)
         }
     },
 }

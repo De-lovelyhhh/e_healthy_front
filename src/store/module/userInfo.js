@@ -4,7 +4,8 @@ const state = () => ({
         identity: 0,
         password: '',
         name: '',
-    }
+    },
+    token: ''
 })
 
 const mutations = {
@@ -18,6 +19,12 @@ const mutations = {
             password: '',
             name: '',
         }
+    },
+    setToken(state, token) {
+        state.token = token
+    },
+    deleteToken(state) {
+        state.token = undefined
     }
 }
 

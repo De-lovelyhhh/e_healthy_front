@@ -38,11 +38,8 @@
                 <el-input type="textarea" v-model="form.diagnosis" :disabled="disable"></el-input>
             </el-form-item>
             <div class="detail_record">
-<!--                <el-form-item label="记录日期">-->
-<!--                    <el-input v-model="form.record_date" disabled></el-input>-->
-<!--                </el-form-item>-->
                 <el-form-item label="诊断医生">
-                    <el-input disabled>{{!disable ? user.name : form.doctor_account}}</el-input>
+                    <el-input disabled :value="!disable ? user.name : form.doctor_account"></el-input>
                 </el-form-item>
             </div>
             <el-form-item v-if="!disable || identity === 1">
@@ -141,7 +138,7 @@ export default {
             }
         },
         async pushCase() {
-
+            this.form.doctor_account = !this.disable ? this.user.name : this.form.doctor_account
             let { data } = await this.$http.post(api.PUSH_CASE, qs.stringify(this.form), {
                 headers: {
                     token: cache.getStroage('token'),
@@ -162,7 +159,7 @@ export default {
                 }
             })
             let account = data.data
-            let { data2 } = await this.$http.get(api.CHECK_PATIENT, {
+            let data2  = await this.$http.get(api.CHECK_PATIENT, {
                 params: {
                     patient_account: account
                 },
@@ -171,7 +168,7 @@ export default {
                 }
             })
 
-            if (data2.code !== 0){
+            if (data2.data.code !== 0){
                 this.$message.error(data.message)
                 return
             }

@@ -8,17 +8,16 @@
 
 <script>
 import Navigation from '@/components/Navigation/Navigation'
-import CaseDetail from './components/CaseDetail/CaseDetail'
 import { api } from './util/api'
 import { cache } from './util/cache'
 import { initSocket, send } from './util/websocket'
 import store from'./store/index'
+import { initRouter } from './util/initRouter'
 
 export default {
     name: 'App',
     components: {
         Navigation,
-        // CaseDetail
     },
     mounted() {
         this.checkToken()
@@ -48,9 +47,11 @@ export default {
                     userInfo.password = res.data.data.Password
                     store.commit('userInfo/changeUserInfo', userInfo)
                     send.call(this, {account: userInfo.account, identity: userInfo.identity, target: '', message: ''})
+                    initRouter.call(this)
                 }
             })
-        }
+        },
+
     }
 }
 </script>

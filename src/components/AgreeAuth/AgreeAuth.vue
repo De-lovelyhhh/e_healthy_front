@@ -34,7 +34,8 @@ export default {
                 organization: '',
                 identity: 0
             },
-            sender: this.$route.params.sender
+            sender: this.$route.params.sender,
+            index: this.$route.params.index
         }
     },
     computed: {
@@ -103,6 +104,8 @@ export default {
                     }
                 })
             } else {
+                store.commit('messageList/deleteMessage', this.index)
+                this.$router.go(-1)
                 return
             }
 
@@ -137,6 +140,8 @@ export default {
             }
             this.$message.success('授权成功')
 
+            store.commit('messageList/deleteMessage', this.index)
+            this.$router.go(-1)
         }
     }
 }

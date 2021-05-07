@@ -36,8 +36,9 @@
 <script>
 import { api } from '../util/api.js'
 import { cache } from '../util/cache.js'
-import { initSocket } from '../util/websocket'
+import { initSocket, send } from '../util/websocket'
 import store from '../store/index'
+import { initRouter } from '../util/initRouter'
 export default {
     name: 'Login',
     data() {
@@ -63,33 +64,58 @@ export default {
                     name: this.form.name,
                     organization: this.form.organization,
                     sex: this.form.sex,
-                }).then(res => {
+                }).then((res) => {
                     if (res.data.code !== 0) {
-                        console.log('sign in error')
-                    } else {
-                        cache.setStorage('token', res.data.token)
+                        this.$message.error('sign in error')
+                        return Promise.reject()
                     }
+                    const userInfo = {
+                        account: this.form.account,
+                        identity: this.form.identity,
+                        password: this.form.password,
+                        name: this.form.name
+                    }
+                    store.commit('userInfo/changeUserInfo', userInfo)
+                    initSocket.call(this)
+                    send.call(this, {account: userInfo.account, identity: userInfo.identity, target: '', message: ''})
+                    return cache.setStorage('token', res.data.token)
+                }).then(() => {
+                    initRouter.call(this)
+
                 })
             } else {
                 this.$http.post(api.LOGIN, {
                     Account: this.form.account,
                     Password: this.form.password,
                     identity: this.form.identity,
-                }).then(res => {
+                }).then((res, reject) => {
                     if (res.data.code !== 0) {
                         console.log('sign in error')
-                    } else {
-                        cache.setStorage('token', res.data.token)
-                        const userInfo = {
-                            account: this.form.account,
-                            identity: this.form.identity,
-                            password: this.form.password,
-                            name: this.form.name
-                        }
-                        store.commit('userInfo/changeUserInfo', userInfo)
-                        initSocket.call(this)
-                        this.$router.push('/')
+                        reject()
                     }
+                    cache.setStorage('token', res.data.token)
+                    // store.commit('userInfo/setToken', res.data.token)
+                    return this.$http.get(api.GET_USERINFO, {
+                        params: {
+                            user_account: this.form.account
+                        },
+                        headers: {
+                            token: res.data.token
+                        }
+                    })
+                }).then(res => {
+                    const userInfo = {
+                        account: this.form.account,
+                        identity: this.form.identity,
+                        password: this.form.password,
+                        name: res.data.data.name
+                    }
+                    store.commit('userInfo/changeUserInfo', userInfo)
+                    initSocket.call(this)
+                    send.call(this, {account: userInfo.account, identity: userInfo.identity, target: '', message: ''})
+                    this.$router.push('/')
+                }).then(() => {
+                    initRouter.call(this)
                 })
             }
         },

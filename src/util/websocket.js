@@ -25,7 +25,7 @@ function getMessage(msg) {
             sender: msg.data
         })
         Vue.prototype.$notify.info({
-            title: 'HTML 片段',
+            title: '新信息',
             dangerouslyUseHTMLString: true,
             message: `<b>${msg.data}</b>向您请求授权`
         })
@@ -45,7 +45,7 @@ export function send(data) {
             }
             this.socket.send(data)
         }
-    }, 3000)
+    }, 1000)
 
 }
 export function wsClose() {

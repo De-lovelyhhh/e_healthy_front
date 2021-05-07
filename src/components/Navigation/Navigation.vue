@@ -7,10 +7,9 @@
             @select="handleSelect"
             active-text-color="#1F7C69"
         >
-            <el-menu-item index="1">首页</el-menu-item>
-            <el-menu-item index="2">{{identity === 1 ? '我的病历' : '病历列表'}}</el-menu-item>
-            <el-menu-item index="3">消息中心</el-menu-item>
-            <el-menu-item index="4" v-if="identity === 1">修改敏感字段</el-menu-item>
+            <el-menu-item index="1">{{identity === 1 ? '我的病历' : '病历列表'}}</el-menu-item>
+            <el-menu-item index="2">消息中心</el-menu-item>
+            <el-menu-item index="3" v-if="identity === 1">修改敏感字段</el-menu-item>
         </el-menu>
         <a @click="logout">退出登录</a>
     </div>
@@ -61,17 +60,15 @@ export default {
     },
     methods: {
         handleSelect(key) {
-            if(key === '2') {
+            if(key === '1') {
                 if (this.identity !== 1) {
                     this.$router.push('/case_list')
                 } else {
                     this.$router.push(`/case_detail/${this.caseId}`)
                 }
-            } else if (key === '1') {
-                this.$router.push('/')
-            } else if (key === '3') {
+            } else if (key === '2') {
                 this.$router.push('/message_list')
-            } else if (key === '4') {
+            } else if (key === '3') {
                 this.$router.push(`/change_fields/${this.caseId}`)
             }
             store.commit('global/getActivedIndex', key)
